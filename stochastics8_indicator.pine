@@ -14,6 +14,8 @@ p5 = input.int(30, "長期1", minval=1, group=grpP)
 p6 = input.int(35, "長期2", minval=1, group=grpP)
 p7 = input.int(40, "長期3", minval=1, group=grpP)
 p8 = input.int(45, "長期4", minval=1, group=grpP)
+smaLen = input.int(6, "SMA期間", minval=1, group=grpP)
+smaRange = input.int(10, "SMA位置の算出期間", minval=1, group=grpP)
 
 grpL = "判定"
 smoothK  = input.int(1, "%K平滑化", minval=1, group=grpL)
@@ -52,6 +54,10 @@ plot(s5, "長期1", c5)
 plot(s6, "長期2", c6)
 plot(s7, "長期3", c7)
 plot(s8, "長期4", c8)
+
+// 終値SMAを、ストキャスと同じ0〜100の目盛りに換算して表示（直近 smaRange 本の高値・安値の中での位置）
+smaPos = ta.stoch(ta.sma(close, smaLen), high, low, smaRange)
+plot(smaPos, "SMA", color.new(color.white, 0), 2)
 
 hline(obLevel, "買われすぎ", color.new(color.gray, 30), hline.style_dotted)
 hline(50, "中央", color.new(color.gray, 60), hline.style_dotted)
