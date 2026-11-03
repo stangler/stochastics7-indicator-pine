@@ -15,7 +15,7 @@ p6 = input.int(35, "長期2", minval=1, group=grpP)
 p7 = input.int(40, "長期3", minval=1, group=grpP)
 p8 = input.int(45, "長期4", minval=1, group=grpP)
 smaLen = input.int(6, "SMA期間", minval=1, group=grpP)
-smaRange = input.int(10, "SMA位置の算出期間", minval=1, group=grpP)
+smaRange = input.int(6, "SMA位置の算出期間", minval=1, group=grpP)
 
 grpL = "判定"
 smoothK  = input.int(1, "%K平滑化", minval=1, group=grpL)
