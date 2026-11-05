@@ -8,10 +8,9 @@ topSpacer = 2
 grpP = "期間"
 p1 = input.int(3,  "短期1", minval=1, group=grpP)
 p2 = input.int(5,  "短期2", minval=1, group=grpP)
-p3 = input.int(8,  "中期1", minval=1, group=grpP)
-p4 = input.int(10, "中期2", minval=1, group=grpP)
-p5 = input.int(30, "長期1", minval=1, group=grpP)
-p6 = input.int(45, "長期2", minval=1, group=grpP)
+p3 = input.int(12, "中期", minval=1, group=grpP)
+p4 = input.int(30, "長期1", minval=1, group=grpP)
+p5 = input.int(45, "長期2", minval=1, group=grpP)
 smaLen = input.int(6, "SMA期間", minval=1, group=grpP)
 smaRange = input.int(6, "SMA位置の算出期間", minval=1, group=grpP)
 
@@ -19,7 +18,7 @@ grpL = "判定"
 smoothK  = input.int(1, "%K平滑化", minval=1, group=grpL)
 obLevel  = input.float(80, "買われすぎライン", group=grpL)
 osLevel  = input.float(20, "売られすぎライン", group=grpL)
-needCnt  = input.int(6, "判定に必要な本数", minval=1, maxval=6, group=grpL)
+needCnt  = input.int(5, "判定に必要な本数", minval=1, maxval=5, group=grpL)
 showSig  = input.bool(true, "シグナル表示", group=grpL)
 showTbl  = input.bool(true, "パネル表示", group=grpL)
 
@@ -31,22 +30,19 @@ s2 = f_sto(p2)
 s3 = f_sto(p3)
 s4 = f_sto(p4)
 s5 = f_sto(p5)
-s6 = f_sto(p6)
 
-// 短期＝青系、中期＝黄系、長期＝赤系
-c1 = color.rgb(60, 120, 255)
-c2 = color.rgb(0, 200, 255)
+// 短期1＝濃い青、短期2＝薄い青、中期＝黄、長期1＝薄い赤、長期2＝濃い赤
+c1 = color.rgb(30, 70, 220)
+c2 = color.rgb(120, 190, 255)
 c3 = color.rgb(255, 215, 0)
-c4 = color.rgb(210, 180, 40)
-c5 = color.rgb(220, 40, 40)
-c6 = color.rgb(255, 100, 80)
+c4 = color.rgb(255, 140, 140)
+c5 = color.rgb(190, 20, 20)
 
 plot(s1, "短期1", c1)
 plot(s2, "短期2", c2)
-plot(s3, "中期1", c3)
-plot(s4, "中期2", c4)
-plot(s5, "長期1", c5)
-plot(s6, "長期2", c6)
+plot(s3, "中期", c3)
+plot(s4, "長期1", c4)
+plot(s5, "長期2", c5)
 
 // 終値SMAを、ストキャスと同じ0〜100の目盛りに換算して表示（直近 smaRange 本の高値・安値の中での位置）
 smaPos = ta.stoch(ta.sma(close, smaLen), high, low, smaRange)
@@ -60,13 +56,13 @@ hline(osLevel, "売られすぎ", color.new(color.gray, 30), hline.style_dotted)
 f_state(v) =>
     v >= obLevel ? "買われすぎ" : v <= osLevel ? "売られすぎ" : v >= 50 ? "強気圏" : "弱気圏"
 
-obCnt = (s1 >= obLevel ? 1 : 0) + (s2 >= obLevel ? 1 : 0) + (s3 >= obLevel ? 1 : 0) + (s4 >= obLevel ? 1 : 0) + (s5 >= obLevel ? 1 : 0) + (s6 >= obLevel ? 1 : 0)
-osCnt = (s1 <= osLevel ? 1 : 0) + (s2 <= osLevel ? 1 : 0) + (s3 <= osLevel ? 1 : 0) + (s4 <= osLevel ? 1 : 0) + (s5 <= osLevel ? 1 : 0) + (s6 <= osLevel ? 1 : 0)
+obCnt = (s1 >= obLevel ? 1 : 0) + (s2 >= obLevel ? 1 : 0) + (s3 >= obLevel ? 1 : 0) + (s4 >= obLevel ? 1 : 0) + (s5 >= obLevel ? 1 : 0)
+osCnt = (s1 <= osLevel ? 1 : 0) + (s2 <= osLevel ? 1 : 0) + (s3 <= osLevel ? 1 : 0) + (s4 <= osLevel ? 1 : 0) + (s5 <= osLevel ? 1 : 0)
 
 allOB = obCnt >= needCnt
 allOS = osCnt >= needCnt
 
-avgV = (s1 + s2 + s3 + s4 + s5 + s6) / 6
+avgV = (s1 + s2 + s3 + s4 + s5) / 5
 totalTxt = avgV >= obLevel ? "買われすぎ状態" : avgV <= osLevel ? "売られすぎ状態" : avgV >= 50 ? "強気状態" : "弱気状態"
 totalCol = avgV >= obLevel ? color.red : avgV <= osLevel ? color.lime : color.white
 
@@ -93,7 +89,7 @@ if sigOS
     alert(alertInfo + "売られすぎ", alert.freq_once_per_bar)
 
 // ===== パネル =====
-var table tbl = table.new(position.top_left, 1, topSpacer + 8, bgcolor=na, frame_width=0, border_width=0)
+var table tbl = table.new(position.top_left, 1, topSpacer + 7, bgcolor=na, frame_width=0, border_width=0)
 panelBg = color.new(color.black, 20)
 
 f_row(r, name, len, v, col) =>
@@ -105,8 +101,7 @@ if barstate.islast and showTbl
     table.cell(tbl, 0, topSpacer, "ストキャスエイト [" + timeframe.period + "]", text_color=color.white, text_halign=text.align_left, text_size=size.normal, bgcolor=panelBg)
     f_row(1, "短期1", p1, s1, c1)
     f_row(2, "短期2", p2, s2, c2)
-    f_row(3, "中期1", p3, s3, c3)
-    f_row(4, "中期2", p4, s4, c4)
-    f_row(5, "長期1", p5, s5, c5)
-    f_row(6, "長期2", p6, s6, c6)
-    table.cell(tbl, 0, topSpacer + 7, "総合判定: " + totalTxt, text_color=totalCol, text_halign=text.align_left, text_size=size.small, bgcolor=panelBg)
+    f_row(3, "中期", p3, s3, c3)
+    f_row(4, "長期1", p4, s4, c4)
+    f_row(5, "長期2", p5, s5, c5)
+    table.cell(tbl, 0, topSpacer + 6, "総合判定: " + totalTxt, text_color=totalCol, text_halign=text.align_left, text_size=size.small, bgcolor=panelBg)
