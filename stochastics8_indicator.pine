@@ -19,7 +19,7 @@ grpL = "判定"
 smoothK  = input.int(1, "%K平滑化", minval=1, group=grpL)
 obLevel  = input.float(80, "買われすぎライン", group=grpL)
 osLevel  = input.float(20, "売られすぎライン", group=grpL)
-needCnt  = input.int(6, "全体判定に必要な本数", minval=1, maxval=6, group=grpL)
+needCnt  = input.int(6, "判定に必要な本数", minval=1, maxval=6, group=grpL)
 showSig  = input.bool(true, "シグナル表示", group=grpL)
 showTbl  = input.bool(true, "パネル表示", group=grpL)
 
@@ -74,41 +74,23 @@ totalCol = avgV >= obLevel ? color.red : avgV <= osLevel ? color.lime : color.wh
 sigOB = allOB and not allOB[1]
 sigOS = allOS and not allOS[1]
 
-var bool armedOB = false
-var bool armedOS = false
-if allOB
-    armedOB := true
-if allOS
-    armedOS := true
-
-longExit = armedOB and ta.crossunder(s1, obLevel)
-shortExit = armedOS and ta.crossover(s1, osLevel)
-if longExit
-    armedOB := false
-if shortExit
-    armedOS := false
-
 if showSig
     if sigOB
-        label.new(bar_index, 100, "全体買われすぎ", style=label.style_label_down, color=color.new(color.red, 100), textcolor=color.red, size=size.small)
+        label.new(bar_index, 100, "買われすぎ", style=label.style_label_down, color=color.new(color.red, 100), textcolor=color.red, size=size.small)
     if sigOS
-        label.new(bar_index, 0, "全体売られすぎ", style=label.style_label_up, color=color.new(color.lime, 100), textcolor=color.lime, size=size.small)
-    if longExit
-        label.new(bar_index, s1, "ロング決済", style=label.style_label_down, color=color.new(color.fuchsia, 100), textcolor=color.fuchsia, size=size.small)
-    if shortExit
-        label.new(bar_index, s1, "ショート決済", style=label.style_label_up, color=color.new(color.aqua, 100), textcolor=color.aqua, size=size.small)
+        label.new(bar_index, 0, "売られすぎ", style=label.style_label_up, color=color.new(color.lime, 100), textcolor=color.lime, size=size.small)
 
-// ===== アラート（全体買われすぎ・全体売られすぎのみ）=====
-alertcondition(sigOB, "全体買われすぎ", "全体買われすぎ")
-alertcondition(sigOS, "全体売られすぎ", "全体売られすぎ")
+// ===== アラート（買われすぎ・売られすぎ）=====
+alertcondition(sigOB, "買われすぎ", "買われすぎ")
+alertcondition(sigOS, "売られすぎ", "売られすぎ")
 
 // alert()：1本のアラートで2種類を通知
 // freq_once_per_bar = 足の途中で条件を満たした最初のティックで即通知（足ごとに1回）
 alertInfo = syminfo.ticker + " [" + timeframe.period + "] "
 if sigOB
-    alert(alertInfo + "全体買われすぎ", alert.freq_once_per_bar)
+    alert(alertInfo + "買われすぎ", alert.freq_once_per_bar)
 if sigOS
-    alert(alertInfo + "全体売られすぎ", alert.freq_once_per_bar)
+    alert(alertInfo + "売られすぎ", alert.freq_once_per_bar)
 
 // ===== パネル =====
 var table tbl = table.new(position.top_left, 1, topSpacer + 8, bgcolor=na, frame_width=0, border_width=0)
