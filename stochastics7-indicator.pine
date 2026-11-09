@@ -1,8 +1,8 @@
 //@version=6
-indicator("ストキャスエイト", shorttitle="Sto8", overlay=false, max_labels_count=500)
+indicator("ストキャス7", shorttitle="Sto7", overlay=false, max_labels_count=500)
 
 // ===== パネル位置調整（上に入れる透明な空行の数）=====
-topSpacer = 2
+topSpacer = 1
 
 // ===== 入力 =====
 grpP = "期間"
@@ -100,7 +100,7 @@ f_row(r, name, len, v, col) =>
 if barstate.islast and showTbl
     for i = 0 to topSpacer - 1
         table.cell(tbl, 0, i, " ", text_size=size.small, bgcolor=na)
-    table.cell(tbl, 0, topSpacer, "ストキャスエイト [" + timeframe.period + "]", text_color=color.white, text_halign=text.align_left, text_size=size.normal, bgcolor=panelBg)
+    table.cell(tbl, 0, topSpacer, "ストキャス7 [" + timeframe.period + "]", text_color=color.white, text_halign=text.align_left, text_size=size.normal, bgcolor=panelBg)
     f_row(1, "短期1", p1, s1, c1)
     f_row(2, "短期2", p2, s2, c2)
     f_row(3, "中期1", p3, s3, c3)

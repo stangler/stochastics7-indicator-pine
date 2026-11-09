@@ -1,8 +1,10 @@
-# ストキャスエイト (Sto8)
+# ストキャス7 (Sto7)
 
 TradingView 用 Pine Script v6 インジケーター。
 期間の異なるストキャスティクス7本を1つのペインに表示し、全体の買われすぎ・売られすぎを判定します。
 YouTube動画で紹介されていたMT4インジケーターを参考に再現したものです。
+
+GitHub: https://github.com/stangler/stochastics7-indicator-pine
 
 ## 特徴
 
@@ -15,12 +17,12 @@ YouTube動画で紹介されていたMT4インジケーターを参考に再現�
 
 | ファイル | 内容 |
 |---|---|
-| `sto8.pine` | インジケーター本体（Pine Script v6） |
+| `stochastics7-indicator.pine` | インジケーター本体（Pine Script v6） |
 
 ## 導入方法
 
 1. TradingView のチャート下部「Pineエディタ」を開く
-2. `sto8.pine` の内容を貼り付けて保存
+2. `stochastics7-indicator.pine` の内容を貼り付けて保存
 3. 「チャートに追加」を押す
 
 ## 設定項目
@@ -54,7 +56,7 @@ YouTube動画で紹介されていたMT4インジケーターを参考に再現�
 値を大きくするほどパネルが下がり、`0` で一番上に詰まります。
 
 ```pine
-topSpacer = 2
+topSpacer = 1
 ```
 
 ## 判定ルール
@@ -94,7 +96,7 @@ topSpacer = 2
 アラートは「買われすぎ」「売られすぎ」の2種類です。
 
 1. チャート上で `Alt + A` を押す
-2. 「条件」で「ストキャスエイト」を選ぶ
+2. 「条件」で「ストキャス7」を選ぶ
 3. 下のプルダウンで「alert() 関数呼び出しのみ」を選ぶ
 4. 「通知」タブで受け取り方法を選ぶ
 5. 「作成」を押す
